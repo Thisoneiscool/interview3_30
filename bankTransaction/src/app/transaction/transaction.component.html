@@ -1,0 +1,96 @@
+<section>
+  <div class="container">
+    <div class="contents">
+      <div class="transfer-box">
+        <div class="box-header box-header--1">
+          <img
+            src="assets/icons/arrows_final.png"
+            alt="Arrows"
+            class="box-header-img"
+          />
+          <h4 class="box-header-title">Make a Transfer</h4>
+        </div>
+        <div class="box-content" *ngIf="!isSubmitted">
+          <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="fromAccnt">FROM ACCOUNT</label>
+              <input
+                type="text"
+                class="input-box"
+                name="fromAccnt"
+                id="fromAccnt"
+                formControlName="fromAccnt"
+              />
+            </div>
+            <div class="form-group">
+              <label for="toAccnt">TO ACCOUNT</label>
+              <input
+                type="text"
+                class="input-box"
+                name="toAccnt"
+                id="toAccnt"
+                formControlName="toAccnt"
+              />
+            </div>
+            <div class="form-group">
+              <label for="amnt">AMOUNT</label>
+              <input
+                type="number"
+                class="input-box"
+                name="amnt"
+                id="amnt"
+                formControlName="amnt"
+                placeholder="$ 0.00"
+              />
+            </div>
+            <div class="btn-group">
+              <button
+                class="btn btn-primary"
+                [disabled]="!transferForm.valid"
+                (click)="isSubmitted = true"
+              >
+                SUBMIT
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="box-content" *ngIf="isSubmitted">
+          <h4>Preview Transfer</h4>
+          <p>To Account: {{ transferForm.get("toAccnt")?.value }}</p>
+          <p>Amount: {{ transferForm.get("amnt")?.value }}</p>
+          <a class="btn btn-primary" (click)="onSubmit()">TRANSFER</a>
+          <a class="btn btn-white" (click)="isSubmitted = false">CANCEL</a>
+        </div>
+
+        <div class="transactions">
+          <div
+            *ngFor="let t of transactionsArray; let i = index"
+            class="transaction"
+          >
+            <span>{{ t.dates.valueDate | date : "MMM d" }}</span>
+            <div class="trans-details">
+              <div class="merchant">
+                <img
+                  [src]="getMerchantLogoUrl(t.merchant.name)"
+                  alt=""
+                  class="merchant-image"
+                />
+                <span
+                  >{{ t.merchant.name }} <br /><span class="m-type">{{
+                    t.transaction.type
+                  }}</span>
+                </span>
+              </div>
+              <span
+                >{{
+                  t.transaction.creditDebitIndicator == "CRDT" ? "+" : "-"
+                }}
+                ${{ t.transaction.amountCurrency.amount }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
